@@ -24,6 +24,7 @@
   "dependencies": {
     "chrome-remote-interface": "git://github.com/sidorares/chrome-remote-interface.git#switch-tab",
     "commander": "~2.0.0",
-    "colors": "~0.6.2"
+    "colors": "~0.6.2",
+    "esprima": "~1.2.2"
   }
 }

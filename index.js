@@ -3,7 +3,8 @@ var util = require("util"),
     path = require("path"),
     repl = require("repl"),
     colors = require("colors"),
-    chrome = require("chrome-remote-interface");
+    chrome = require("chrome-remote-interface"),
+    esprima = require("esprima");
 
 const PROP_SHOW_COUNT = 5;
 
@@ -276,9 +277,18 @@ ChromeREPL.prototype = {
   },
 
   evalInTab: function(input, cb) {
-    this.client.Runtime.evaluate({expression: input.slice(1, -2), generatePreview: true}, function(err, resp) {
+    this.buffer = this.buffer ? this.buffer : "";
+    input = input.slice(1, -1);
+    this.buffer += input;
+    try{
+      esprima.parse(this.buffer);
+    }catch(e){
+      return;
+    }
+    this.client.Runtime.evaluate({expression: this.buffer, generatePreview: true}, function(err, resp) {
       return cb(null, resp);
     });
+    this.buffer = "";
   },
 
   transformResult: function(result) {
